@@ -1,25 +1,25 @@
 import { useContext } from "react";
-import { OrderContext } from "../context/OrderContext";
+import { AppContext } from "../context/AppContext";
+import { isValidOrder } from "../utils/validation";
 import { Link } from "react-router-dom";
 
 const Orders = () => {
-  const { state } = useContext(OrderContext);
+  const { state } = useContext(AppContext);
 
-  const validOrders = state.orders.filter(order =>
-    order.orderID &&
-    order.customerName &&
-    order.items &&
-    order.totalAmount > 0
-  );
+  const validOrders = state.orders.filter(isValidOrder);
 
   return (
     <div>
-      <h2>Valid Orders</h2>
+      <h2>Orders</h2>
+
       {validOrders.map(order => (
         <div key={order.orderID}>
-          <h3>{order.customerName}</h3>
-          <p>Total: ₹{order.totalAmount}</p>
-          <Link to={`/orders/${order.orderID}`}>View Details</Link>
+          <p>{order.customerName}</p>
+          <p>{order.restaurant}</p>
+
+          <Link to={`/orders/${order.orderID}`}>
+            View Details
+          </Link>
         </div>
       ))}
     </div>
