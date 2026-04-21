@@ -18,7 +18,20 @@ export const AppProvider = ({ children }) => {
       dispatch({ type: "SET_LOADING", payload: true });
       try {
         const data = await getOrders();
-        dispatch({ type: "SET_ORDERS", payload: data });
+        const rawOrders = Array.isArray(data) ? data : data?.orders;
+
+        const normalizedOrders = Array.isArray(rawOrders)
+          ? rawOrders.map(order => ({
+              ...order,
+              orderID: order?.orderID ?? order?.orderId,
+              status:
+                typeof order?.status === "string"
+                  ? order.status.toLowerCase()
+                  : order?.status
+            }))
+          : [];
+
+        dispatch({ type: "SET_ORDERS", payload: normalizedOrders });
       } catch (error) {
         dispatch({
           type: "SET_ERROR",
