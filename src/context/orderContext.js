@@ -1,6 +1,6 @@
 import { createContext, useReducer, useEffect } from "react";
 import { AppReducer } from "../reducer/AppReducer";
-import { getToken, getOrders } from "../services/api";
+import { getOrders } from "../services/api";
 
 export const AppContext = createContext();
 
@@ -13,8 +13,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = await getToken();
-      const data = await getOrders(token);
+      const data = await getOrders();
 
       dispatch({ type: "SET_ORDERS", payload: data });
     };
